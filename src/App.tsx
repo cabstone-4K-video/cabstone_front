@@ -8,6 +8,7 @@ import SignUpPage from './pages/SignUpPage';
 import StartingPage from './pages/StartingPage';
 import RoomReadyPage from './pages/RoomReadyPage';
 import MainLayout from './layouts/MainLayout/MainLayout';
+import RoomMeeting from './components/RoomMeeting/RoomMeeting';
 
 const router = createBrowserRouter([
 	{
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
 			{
 				path: 'roomReady',
 				element: <RoomReadyPage/>
+			},
+			{
+				path : 'roomMeeting',
+				element : <RoomMeeting/>
 			}
 		]
 		

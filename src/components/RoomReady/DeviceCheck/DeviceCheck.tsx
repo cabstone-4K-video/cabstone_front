@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import classes from './DeviceCheck.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../../store/store'; // 경로는 실제 구조에 맞게 조정하세요.
-import { updateConnectionInfo } from '../../../store/connectionSlice'; // 경로는 실제 구조에 맞게 조정하세요.
+import { RootState } from '../../../store/store'; 
+import { updateConnectionInfo } from '../../../store/connectionSlice'; 
 
 import cameraIcon from '../../../assets/icon/cameraIcon.svg';
 import micIcon from '../../../assets/icon/micIcon.svg';
@@ -13,7 +13,6 @@ const DeviceCheck: React.FC = () => {
 	const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
 	
 	const [userName, setUserName] = useState<string>('');
-	const [onFocus, setOnFocus] = useState<boolean>(false);
 	//blur 이벤트가 발생했을 때만 redux변수 업데이트해주기 위함.
 	const [selectedVideoDevice, setSelectedVideoDevice] = useState<string>('');
 	const [selectedAudioDevice, setSelectedAudioDevice] = useState<string>('');
@@ -24,10 +23,10 @@ const DeviceCheck: React.FC = () => {
 	useEffect(() => {
 		const getDevices = async () => {
 			try {
-				// 사용자에게 오디오와 비디오에 대한 권한을 모두 요청합니다.
+				// 사용자에게 오디오와 비디오에 대한 권한을 모두 요청
 				const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 				
-				// 권한을 얻은 후에는 사용하지 않는 트랙을 바로 중지합니다.
+				// 권한을 얻은 후에는 사용하지 않는 트랙을 바로 중지
 				stream.getTracks().forEach(track => track.stop());
 				const devices = await navigator.mediaDevices.enumerateDevices();
 				
@@ -54,17 +53,20 @@ const DeviceCheck: React.FC = () => {
 		return device ? device.label : '';
 	};
 
+	const handleBlur = () => {
+		dispatch(updateConnectionInfo({
+			...connectionInfo,
+			userName : userName,
+		}));
+	};
 
-	useEffect(()=>{
-		if(!onFocus){
-			
-			dispatch(updateConnectionInfo({
-				userName : userName,
-				videoDevice : selectedVideoDevice,
-				audioDevice : selectedAudioDevice,
-			}));
-		}
-		
+	useEffect(()=>{	
+		dispatch(updateConnectionInfo({
+			userName : userName,
+			videoDevice : selectedVideoDevice,
+			audioDevice : selectedAudioDevice,
+		}));
+	
 	}, [selectedAudioDevice, selectedVideoDevice]);
 
 	return (
@@ -80,10 +82,10 @@ const DeviceCheck: React.FC = () => {
 						placeholder='방 참여 시 이 이름으로 보이게 됩니다.'
 						value={userName}
 						onChange={(e) => setUserName(e.target.value)}
-						onFocus={()=>setOnFocus(true)}
-						onBlur={()=>setOnFocus(false)}
+						onBlur={handleBlur}
 					/>
-				</div>
+				</div> 
+				
 				
 				{/* Video device selector */}
 				<div className={classes.connectionInfo}>

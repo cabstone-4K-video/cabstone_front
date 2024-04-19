@@ -12,37 +12,20 @@ const RoomSelector: React.FC = () => {
 
 	useEffect(() => {
 		randomGenerate();
+		
 	}, []);
-
 
 	const randomGenerate = () => {
 		const randomName = generateRandomName();
 		setRoomName(randomName);
 	}
 
-	const handleSubmit = async (e : React.FormEvent) => {
-		e.preventDefault();
-		const body = JSON.stringify(roomName);
-		try{
-			const response = await axios.post('endpoint_url', roomName , {
-				headers : {
-					'Content-Type' : 'application/json',
-					'Authorization' : 'Bearer ${}',
-				}
-			});
-
-			navigate('/main/roomReady');
-			console.log(response);
-			
-		}catch(error){
-			console.error("Failed to create room: ", error);
-			//일단은 클릭만해도 roomReady로 이동하게 해뒀지만, roomReady로 이동하는 로직을 막아둬야할 필요는 있음.
-			navigate('/main/roomReady');
-		}
+	const handleJoinButton = async (e : React.FormEvent) => {
+		navigate('/main/roomReady' , { state : { roomName }});
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<>
 			<div className={classes.container}>
 				<div className={classes.title}>
 					임시 타이틀
@@ -66,11 +49,11 @@ const RoomSelector: React.FC = () => {
 				</div>
 				<button 
 					className={classes.joinButton} 
-					type='submit'
+					onClick={handleJoinButton}
 				>JOIN</button>
 			</div>
 
-		</form>
+		</>
 	)
 };
 
