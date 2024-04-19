@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import CameraCheck from './CameraCheck/CameraCheck';
 import DeviceCheck from './DeviceCheck/DeviceCheck';
-import classes from './style.module.css'
+import classes from './RoomReady.module.css'
+import { useNavigate } from 'react-router-dom';
+import AudioTest from './AudioTest/AudioTest';
 
 const RoomReady : React.FC = () => {
-	
+
+	const navigate = useNavigate();
+
+	const handleJoinButton = () => {
+		navigate('/main/meetingRoom')
+	}
+
   return (
     <div className={classes.container}>
        <div className={classes.videoContainer}>
@@ -12,8 +20,8 @@ const RoomReady : React.FC = () => {
 				</div>
 				<div className={classes.checkContainer}>
 					<DeviceCheck />
-					{/* 'Join session' 버튼 추가 */}
-					<button className={classes.joinSessionButton}>Join session</button>
+					<AudioTest/>
+					<button className={classes.joinSessionButton} onClick={handleJoinButton}>Join session</button>
 				</div>
 				
     </div>

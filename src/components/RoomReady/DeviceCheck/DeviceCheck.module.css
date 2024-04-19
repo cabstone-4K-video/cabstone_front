@@ -27,6 +27,7 @@
   border-top: 2px solid #ddd;
   padding-top: 20px;
 	margin-bottom: 20px;
+	min-width: 400px
 }
 
 .connectionInfo{
