@@ -8,7 +8,7 @@ import SignUpPage from './pages/SignUpPage';
 import StartingPage from './pages/StartingPage';
 import RoomReadyPage from './pages/RoomReadyPage';
 import MainLayout from './layouts/MainLayout/MainLayout';
-import RoomMeeting from './components/RoomMeeting/RoomMeeting';
+import RoomMeeting from './components/RoomMeeting/ScreenShare/ScreenShare';
 
 const router = createBrowserRouter([
 	{

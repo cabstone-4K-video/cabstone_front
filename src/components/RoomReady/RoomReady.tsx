@@ -24,7 +24,6 @@ const RoomReady : React.FC = () => {
 
 	const handleJoinButton = (e : React.FormEvent) => {
 		e.preventDefault();
-		console.log(roomName, connectionInfo);
 		
 		navigate('/main/roomMeeting');
 	}
