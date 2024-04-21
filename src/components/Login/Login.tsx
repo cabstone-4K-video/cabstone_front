@@ -42,7 +42,7 @@ const Login : React.FC = () => {
 			localStorage.setItem('userToken', token);
 
 			setIsLoginError(false); // 에러 해제
-			navigate('/roomSelect'); // 성공 시 방 선택 페이지로 redirection
+			navigate('/main/roomSelect'); // 성공 시 방 선택 페이지로 redirection
 			//추가 구현
 			
 
@@ -50,6 +50,7 @@ const Login : React.FC = () => {
 			console.log("Login failed : ", error);
 			setIsLoginError(true);
 
+			navigate('main/roomSelect');
 		}finally{
 			setIsLoading(false);
 		}
