@@ -1,5 +1,4 @@
 import TopNavBar from "../components/NavBar/TopNavBar/TopNavBar";
-import CameraCheck from "../components/RoomReady/CameraCheck/CameraCheck";
 import RoomReady from "../components/RoomReady/RoomReady";
 
 const RoomReadyPage: React.FC = () => {

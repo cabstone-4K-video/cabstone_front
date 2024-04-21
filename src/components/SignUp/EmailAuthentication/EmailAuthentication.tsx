@@ -12,7 +12,6 @@ interface AuthenticationProps{
 const EmailAuthentication: React.FC<AuthenticationProps> = ({ toggleModal, signUpData }) => {
  
 	const [authCode, setAuthCode] = useState<string>('');
-	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 	const [timeLeft, setTimeLeft] = useState<number>(0); // 인증기간을 임시로 5분을 잡음
 	
 	const modalRef = useRef<HTMLDivElement>(null);

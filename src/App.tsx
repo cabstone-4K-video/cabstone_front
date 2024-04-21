@@ -1,6 +1,6 @@
 
 import './App.css'
-import { createBrowserRouter, RouterProvider, Route, redirect } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, } from 'react-router-dom';
 import RoomSelectPage from './pages/RoomSelectPage';
 import LoginPage from './pages/LoginPage';
 import UserInfoLayout from './layouts/UserInfoLayout/UserInfoLayout';

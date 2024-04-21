@@ -1,6 +1,6 @@
 import axios from "axios";
 import classes from './EmailDuplicate.module.css';
-import { useEffect } from "react";
+
 import SignUpUser from '../../../types/SignUpUser.type';
 
 interface EmailProp{

@@ -86,7 +86,7 @@ const AudioTest: React.FC = () => {
       
 			<button 
 				className={classes.micCheckButton} 
-				onClick={(e) => setMuted(!muted)}
+				onClick={() => setMuted(!muted)}
 				
 			>
 				{!muted? '마이크 테스트 하기' : '테스트 멈추기'}

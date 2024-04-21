@@ -1,7 +1,7 @@
 import classes from './style.module.css';
 import { isCorrectEmail, isCorrectPassWord, isCorrectPhoneNumber } from '../../util/regExp';
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 import EmailDuplicateCheck from './EmailDuplicateCheck/EmailDuplicateCheck';
 import SignUpUser from '../../types/SignUpUser.type';

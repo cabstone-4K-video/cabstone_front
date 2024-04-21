@@ -3,7 +3,7 @@ import classes from './RoomSelector.module.css';
 import generateRandomName from './RandomNameGenerator/RandomNameGenerator';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 
 const RoomSelector: React.FC = () => {
 	
@@ -20,7 +20,7 @@ const RoomSelector: React.FC = () => {
 		setRoomName(randomName);
 	}
 
-	const handleJoinButton = async (e : React.FormEvent) => {
+	const handleJoinButton = async () => {
 		navigate('/main/roomReady' , { state : { roomName }});
 	}
 

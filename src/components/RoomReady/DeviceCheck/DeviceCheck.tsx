@@ -48,10 +48,10 @@ const DeviceCheck: React.FC = () => {
 		setSelectedAudioDevice(event.target.value);
 	};
 
-	const getVideoLabel = (deviceId : string) => {
-		const device = videoDevices.find(device => device.deviceId === deviceId);
-		return device ? device.label : '';
-	};
+	// const getVideoLabel = (deviceId : string) => {
+	// 	const device = videoDevices.find(device => device.deviceId === deviceId);
+	// 	return device ? device.label : '';
+	// };
 
 	const handleBlur = () => {
 		dispatch(updateConnectionInfo({
