@@ -50,7 +50,7 @@ const Login : React.FC = () => {
 			console.log("Login failed : ", error);
 			setIsLoginError(true);
 
-			navigate('main/roomSelect');
+			navigate('/main/roomSelect');
 		}finally{
 			setIsLoading(false);
 		}
