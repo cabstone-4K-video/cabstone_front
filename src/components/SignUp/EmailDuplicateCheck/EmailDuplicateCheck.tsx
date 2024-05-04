@@ -1,19 +1,19 @@
 import axios from "axios";
 import classes from './EmailDuplicate.module.css';
 
-import SignUpUser from '../../../types/SignUpUser.type';
-
 interface EmailProp{
   email : string;
-  setSignUpForm : Function;
+  setIsEmailDuplicated : (e : boolean) => void;
 }
 
-const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setSignUpForm }) => {
+const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setIsEmailDuplicated }) => {
 
   const CheckDuplicate = async(event : React.FormEvent) => {
 		event.preventDefault();
 
-		const body = JSON.stringify(email);
+		const body = JSON.stringify({ email });
+    console.log(body);
+    
 		try{
 			const response = await axios.post('endpoint_url', body, {
 				headers : {
@@ -22,9 +22,9 @@ const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setSignUpForm }) => {
 			});
 			
       if(response){
-        setSignUpForm((prev : SignUpUser) => ({...prev, isEmailDuplicate: false}));
-      }else{
-        setSignUpForm((prev : SignUpUser) => ({...prev, isEmailDuplicate: true}));
+        console.log('response good');
+        setIsEmailDuplicated(true);
+        
       }
 		}
 		catch(error){
@@ -33,8 +33,8 @@ const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setSignUpForm }) => {
 	} //이메일 중복여부를 백엔드에 보내서 판단하는 함수
 
   return (
-    <div className={classes.container} onSubmit={CheckDuplicate}>
-      <button className={classes.duplicateCheckButton}>
+    <div className={classes.container}>
+      <button className={classes.duplicateCheckButton} onClick={CheckDuplicate}>
         <h2>이메일 중복확인</h2>
       </button>
     </div>

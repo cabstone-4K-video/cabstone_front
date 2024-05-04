@@ -4,8 +4,6 @@ interface SignUpUser{
 	email : string;
 	password : string;
 	phoneNumber : string;
-	authenticateCode : string;
-	isEmailDuplicated : boolean;
 	signUpDate : string;
 }
 
