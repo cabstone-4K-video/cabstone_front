@@ -19,14 +19,13 @@ const SignUp :React.FC = () => {
 	const navigate = useNavigate();
 	const [signUpForm, setSignUpForm] = useState<SignUpUser>({
 		email: '',
-		isEmailDuplicated: false,
-		authenticateCode: '',
     password: '',
     phoneNumber: '',
 		signUpDate : '',
   }); //폼 제출 시 확인사항
 	const [passwordCheck, setPassWordCheck] = useState<string>('');
 
+	const [emailDuplicated, setEmailDuplicated] = useState<boolean>(false);
   const [errors, setErrors] = useState<ErrorState>({}); //에러 메세지
 
 	const emailRef = useRef<HTMLInputElement>(null);
@@ -63,11 +62,6 @@ const SignUp :React.FC = () => {
 		return isCorrectPhoneNumber(signUpForm.phoneNumber);
 	}
 
-	useEffect(()=>{
-		if(signUpForm.isEmailDuplicated){ 
-			setErrors(prev => ({...prev, email : '중복된 이메일입니다.'}));
-		}
-	}, [signUpForm.isEmailDuplicated]);
 
 	const handleSignUp = () => {
 		const newErrors : ErrorState = {};

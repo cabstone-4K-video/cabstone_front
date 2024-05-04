@@ -44,13 +44,14 @@ const EmailAuthentication: React.FC<AuthenticationProps> = ({ toggleModal, signU
 	const completeSignUp = async (event : React.FormEvent) => {
 		event.preventDefault();
 		
+		//인증코드 안맞으면 함수 종료하는 로직
+
 		const signUpDate = new Date().toISOString();
 
 		const finalSignUpData = {
 			...signUpData,
 			signUpDate : signUpDate,
-			authenticateCode : authCode,
-		};
+		}; //이메일 인증코드 
 
 		const body = JSON.stringify(finalSignUpData);
 
