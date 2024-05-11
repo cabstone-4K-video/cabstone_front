@@ -4,9 +4,17 @@ import classes from './EmailDuplicate.module.css';
 interface EmailProp{
   email : string;
   setIsEmailDuplicated : (e : boolean) => void;
+	setErrors: (updateFunction: (errors: ErrorState) => ErrorState) => void;
 }
 
-const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setIsEmailDuplicated }) => {
+interface ErrorState {
+  email?: string;
+  password?: string;
+  passwordCheck?: string;
+  phoneNumber?: string;
+}
+
+const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setIsEmailDuplicated, setErrors }) => {
 
   const CheckDuplicate = async(event : React.FormEvent) => {
 		event.preventDefault();
@@ -15,22 +23,24 @@ const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setIsEmailDuplicated }
     console.log(body);
     
 		try{
-			const response = await axios.post('endpoint_url', body, {
+			const response = await axios.post('http://localhost:8080/api/user/checkduplicate', body, {
 				headers : {
 					'Content-Type' : 'application/json',
 				}
 			});
 			
-      if(response){
-        console.log('response good');
-        setIsEmailDuplicated(true);
-        
-      }
+      if(response.data.code === '200'){
+				console.log('Email is Available');
+        setIsEmailDuplicated(false);
+        setErrors(errors => ({...errors, email: ''})); // 중복되지 않음
+			}
 		}
 		catch(error){
-			console.error("Error occured!");
+			console.error("Error occurred:", error);
+      setIsEmailDuplicated(true);
+      setErrors(errors => ({...errors, email: '중복된 이메일입니다.'})); //중복됨
 		}
-	} //이메일 중복여부를 백엔드에 보내서 판단하는 함수
+	} 
 
   return (
     <div className={classes.container}>

@@ -31,26 +31,26 @@ const Login : React.FC = () => {
 		const body = JSON.stringify({ email, passWord });	
 		setIsLoading(true);
 		try {
-			const response = await axios.post('endPoint_url', body, {
+			const response = await axios.post('http://localhost:8080/api/user/login', body, {
 				headers : {
 					'Content-Type' : 'application/json',
-					'Authorization' : 'Bearer ${}', //수정필요
 				}
 			})
 
-			const token = response.data.token;
-			localStorage.setItem('userToken', token);
-
-			setIsLoginError(false); // 에러 해제
-			navigate('/main/roomSelect'); // 성공 시 방 선택 페이지로 redirection
-			//추가 구현
-			
+			const { code, message, token } = response.data;
+			if(code === '200' && token){
+				localStorage.setItem('userToken', token);
+				navigate('/main/roomSelect');
+			}else{
+				setIsLoginError(true);
+				alert(message);
+			}
 
 		}catch(error){
 			console.log("Login failed : ", error);
 			setIsLoginError(true);
+			alert("로그인에 실패했습니다. 다시 시도해주세요.");
 
-			navigate('/main/roomSelect');
 		}finally{
 			setIsLoading(false);
 		}

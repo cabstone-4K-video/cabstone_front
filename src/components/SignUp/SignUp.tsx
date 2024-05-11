@@ -25,7 +25,7 @@ const SignUp :React.FC = () => {
   }); //폼 제출 시 확인사항
 	const [passwordCheck, setPassWordCheck] = useState<string>('');
 
-	const [emailDuplicated, setEmailDuplicated] = useState<boolean>(false);
+	const [isEmailDuplicated, setIsEmailDuplicated] = useState<boolean>(false);
   const [errors, setErrors] = useState<ErrorState>({}); //에러 메세지
 
 	const emailRef = useRef<HTMLInputElement>(null);
@@ -110,7 +110,7 @@ const SignUp :React.FC = () => {
 			return;
 		}
 
-		if(signUpForm.isEmailDuplicated){
+		if(isEmailDuplicated){
 			return;
 		} //이메일이 중복되었으면 가입을 막음.
 		
@@ -121,6 +121,7 @@ const SignUp :React.FC = () => {
 		toggleModal();
 		
 	}
+
 
 	return (
 		<div className={classes.outlet_container}>
@@ -140,7 +141,11 @@ const SignUp :React.FC = () => {
 							value={signUpForm.email}	
 							onChange={handleChange}
 						/>
-						<EmailDuplicateCheck email={signUpForm.email} setSignUpForm={() => setSignUpForm}/>
+						<EmailDuplicateCheck 
+							email={signUpForm.email} 
+							setIsEmailDuplicated={setIsEmailDuplicated} 
+							setErrors={setErrors}
+						/>
 				
 					</div>
 					
