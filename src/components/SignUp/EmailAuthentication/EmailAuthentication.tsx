@@ -29,9 +29,11 @@ const EmailAuthentication: React.FC<AuthenticationProps> = ({ toggleModal, signU
   }, [timeLeft]);
 
 
-	const sendAuthenticateEmail = () => {
-		//이메일로 인증버튼 보내주는 함수 기능 구현해야됨.
+	const sendAuthenticateEmail = async() => {
+		
 		setTimeLeft(300);
+
+		//인증코드를 state로 관리 후, 이메일 인증 확인.
 	}
 
 	const formatTimeLeft = () => {
@@ -44,7 +46,6 @@ const EmailAuthentication: React.FC<AuthenticationProps> = ({ toggleModal, signU
 	const completeSignUp = async (event : React.FormEvent) => {
 		event.preventDefault();
 		
-		//인증코드 안맞으면 함수 종료하는 로직
 
 		const signUpDate = new Date().toISOString();
 

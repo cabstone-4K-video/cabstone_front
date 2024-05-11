@@ -115,8 +115,6 @@ const SignUp :React.FC = () => {
 		} //이메일이 중복되었으면 가입을 막음.
 		
 
-		
-		//이메일 인증코드 발송하는 로직
 
 		toggleModal();
 		
