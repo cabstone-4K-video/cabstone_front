@@ -6,6 +6,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginError from './LoginError/LoginError';
 import Loading from '../Loading/Loading';
+import { useDispatch } from 'react-redux';
+
+import { setToken } from '../../store/jwtSlice';
+
 
 const Login : React.FC = () => {
 	const [focused, setFocused] = useState<string | null>(null);
