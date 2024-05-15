@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AuthTokenState from "../types/AuthToken.type";
 
-
-export const TOKEN_TIME_OUT = 600 * 1000; // 백엔드 토큰이랑 맞추기
+// 백엔드 JWT 유효시간 8시간(28,800,000 밀리초)에 맞추기
+export const TOKEN_TIME_OUT = 8 * 60 * 60 * 1000;
 
 const initialState: AuthTokenState = {
   authenticated: false,
@@ -11,9 +11,9 @@ const initialState: AuthTokenState = {
 }
 
 export const jwtSlice = createSlice({
-  name : 'authToken',
+  name: 'authToken',
   initialState,
-  reducers : {
+  reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.authenticated = true;
       state.accessToken = action.payload;
@@ -26,7 +26,6 @@ export const jwtSlice = createSlice({
     },
   }
 })
-
 
 export const { setToken, deleteToken } = jwtSlice.actions;
 

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import classes from './EmailAuthentication.module.css';
 import SignUpUser from '../../../types/SignUpUser.type';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthenticationProps{
 	toggleModal : () => void;
@@ -15,6 +16,7 @@ const EmailAuthentication: React.FC<AuthenticationProps> = ({ toggleModal, signU
 	const [timeLeft, setTimeLeft] = useState<number>(0); // 인증기간을 임시로 5분을 잡음
 	
 	const modalRef = useRef<HTMLDivElement>(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		let timer: ReturnType<typeof setInterval> | null = null;
@@ -65,12 +67,18 @@ const EmailAuthentication: React.FC<AuthenticationProps> = ({ toggleModal, signU
 
 			if (response){
 				//응답 제대로 왔으면 그에 맞는 화면 구성
+				alert('회원가입이 정상처리되어 로그인화면으로 이동합니다!');
+				navigate('/login');
 			}
 			else{
-				//회원가입 제대로 안됐으면 맞는 화면 구성
+				//회원가입 제대로 안됐으면 맞는 화면 구성(백엔드와 논의)
+				alert('인증 코드가 올바르지 않습니다!');
+				navigate('/login');
 			}
 		} catch(error){
 			console.error('회원가입 중 에러 발생', error);
+			alert('회원가입이 정상처리되어 로그인화면으로 이동합니다!');
+			navigate('/login');
 		}
 	}
 

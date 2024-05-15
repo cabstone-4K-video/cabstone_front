@@ -6,21 +6,21 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginError from './LoginError/LoginError';
 import Loading from '../Loading/Loading';
+
 import { useDispatch } from 'react-redux';
-
 import { setToken } from '../../store/jwtSlice';
-
+import { setRefreshToken } from '../../util/Cookie';
+import { AppDispatch } from '../../store/store';
 
 const Login : React.FC = () => {
 	const [focused, setFocused] = useState<string | null>(null);
 	const [email, setEmail] = useState<string>('');
 	const [passWord, setPassWord] = useState<string>('');
 	const [isLoginError, setIsLoginError] = useState<boolean>(false);
- 
-	const [isLoading, setIsLoading] = useState<boolean>(false); //redux로 나중에 뺄듯.
+	const [isLoading, setIsLoading] = useState<boolean>(false); 
 	
-
 	const navigate = useNavigate();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const handleFocus = (id: string) => {
 		setFocused(id);

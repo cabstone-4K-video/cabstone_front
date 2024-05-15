@@ -9,6 +9,10 @@ import StartingPage from './pages/StartingPage';
 import RoomReadyPage from './pages/RoomReadyPage';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import RoomMeeting from './components/RoomMeeting/ScreenShare/ScreenShare';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from './store/store';
+import { useEffect } from 'react';
+import { setToken } from './store/jwtSlice';
 
 const router = createBrowserRouter([
 	{
@@ -24,9 +28,6 @@ const router = createBrowserRouter([
 					{ path: 'agreement', element: <SignUpPage/> }
 				] 
 			},
-			
-
-			//다른 레이아웃에 놓아야할 것들
 
 			
 		]
@@ -56,6 +57,17 @@ const router = createBrowserRouter([
 ])
 
 function App() {
+
+	const dispatch = useDispatch<AppDispatch>();
+
+	useEffect(() => {
+		const token = localStorage.getItem('userToken');
+		if(token){
+			dispatch(setToken(token));
+		}else{
+
+		}
+	})
 
   return (
     <>

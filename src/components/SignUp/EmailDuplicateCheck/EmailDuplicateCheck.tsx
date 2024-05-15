@@ -37,7 +37,8 @@ const EmailDuplicateCheck:React.FC<EmailProp> = ({ email, setIsEmailDuplicated, 
 		}
 		catch(error){
 			console.error("Error occurred:", error);
-      setIsEmailDuplicated(true);
+			//일단 인증값 참으로 설정
+      setIsEmailDuplicated(false);
       setErrors(errors => ({...errors, email: '중복된 이메일입니다.'})); //중복됨
 		}
 	} 
