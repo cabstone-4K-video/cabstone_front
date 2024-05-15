@@ -9,7 +9,6 @@ import Loading from '../Loading/Loading';
 
 import { useDispatch } from 'react-redux';
 import { setToken } from '../../store/jwtSlice';
-import { setRefreshToken } from '../../util/Cookie';
 import { AppDispatch } from '../../store/store';
 
 const Login : React.FC = () => {
@@ -34,6 +33,7 @@ const Login : React.FC = () => {
 		event.preventDefault();
 		const body = JSON.stringify({ email, passWord });	
 		setIsLoading(true);
+
 		try {
 			const response = await axios.post('http://localhost:8080/api/user/login', body, {
 				headers : {
@@ -44,6 +44,7 @@ const Login : React.FC = () => {
 			const { code, message, token } = response.data;
 			if(code === '200' && token){
 				localStorage.setItem('userToken', token);
+				dispatch(setToken(token));
 				navigate('/main/roomSelect');
 			}else{
 				setIsLoginError(true);
@@ -76,6 +77,7 @@ const Login : React.FC = () => {
 					onChange={(e) => setEmail(e.target.value)}
 				/>
 				{focused === 'email' && <span className={classes.message}><span className={classes.red}>TIP</span>이메일 아이디만 입력해주세요!</span>}
+				
 				<input
 					id='login_password'
 					className={classes.input}
