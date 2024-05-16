@@ -1,15 +1,11 @@
 
-import axios from 'axios';
 import Divider from '../Divider/Divider';
 import classes from './style.module.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginError from './LoginError/LoginError';
 import Loading from '../Loading/Loading';
-
-import { useDispatch } from 'react-redux';
-import { setToken } from '../../store/jwtSlice';
-import { AppDispatch } from '../../store/store';
+import axios from '../../apis/axios';
 
 const Login : React.FC = () => {
 	const [focused, setFocused] = useState<string | null>(null);
@@ -19,7 +15,6 @@ const Login : React.FC = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false); 
 	
 	const navigate = useNavigate();
-	const dispatch = useDispatch<AppDispatch>();
 
 	const handleFocus = (id: string) => {
 		setFocused(id);
@@ -35,31 +30,26 @@ const Login : React.FC = () => {
 		setIsLoading(true);
 
 		try {
-			const response = await axios.post('http://localhost:8080/api/user/login', body, {
-				headers : {
-					'Content-Type' : 'application/json',
-				}
-			})
+      const response = await axios.post('/user/login', body);
 
-			const { code, message, token } = response.data;
-			if(code === '200' && token){
-				localStorage.setItem('userToken', token);
-				dispatch(setToken(token));
-				navigate('/main/roomSelect');
-			}else{
-				setIsLoginError(true);
-				alert(message);
-			}
+      const { code, message, token } = response.data;
+      if (code === '200' && token) {
+        localStorage.setItem('userToken', token);
+        navigate('/main/roomSelect');
+      } else {
+        setIsLoginError(true);
+        alert(message);
+      }
 
-		}catch(error){
-			console.log("Login failed : ", error);
-			setIsLoginError(true);
-			alert("로그인에 실패했습니다. 다시 시도해주세요.");
+    } catch (error) {
+      console.log("Login failed : ", error);
+      setIsLoginError(true);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
 
-		}finally{
-			setIsLoading(false);
-		}
-		
+    } finally {
+      setIsLoading(false);
+    }
+  
 	}
 
 

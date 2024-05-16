@@ -9,18 +9,16 @@ import StartingPage from './pages/StartingPage';
 import RoomReadyPage from './pages/RoomReadyPage';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import RoomMeeting from './components/RoomMeeting/ScreenShare/ScreenShare';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from './store/store';
+
 import { useEffect } from 'react';
-import { setToken } from './store/jwtSlice';
 
 interface PrivateRouteProps{
 	children : React.ReactElement;
 }
 
 const PrivateRoute : React.FC<PrivateRouteProps> = ({ children }) => {
-	const authenticated = useSelector((state : RootState) => state.authToken.authenticated);
-	if(!authenticated){
+	const authenticated = localStorage.getItem('userToken');
+	if(authenticated){ //  !authenticated로 바꿔서.
 		alert('로그인 후에 이용가능합니다.');
 		return <Navigate to="/login" />;
 	}
@@ -59,21 +57,13 @@ const router = createBrowserRouter([
 		
 	},
 
-	
-	
 ])
 
 function App() {
 
-	const dispatch = useDispatch<AppDispatch>();
-
 	useEffect(() => {
 		const token = localStorage.getItem('userToken');
-		if(token){
-			dispatch(setToken(token));
-		}else{
-
-		}
+		
 	})
 
   return (
