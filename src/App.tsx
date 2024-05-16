@@ -20,8 +20,12 @@ interface PrivateRouteProps{
 
 const PrivateRoute : React.FC<PrivateRouteProps> = ({ children }) => {
 	const authenticated = useSelector((state : RootState) => state.authToken.authenticated);
-	
-	return authenticated ? children : <Navigate to="/login" />
+	if(!authenticated){
+		alert('로그인 후에 이용가능합니다.');
+		return <Navigate to="/login" />;
+	}
+
+	return children;
 }
 
 const router = createBrowserRouter([
