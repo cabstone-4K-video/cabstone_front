@@ -1,0 +1,28 @@
+.participants_container {
+  display: grid;
+  gap: 10px; 
+}
+
+.participant {
+  background-color: #ddd;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.participants_container.one {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.participants_container.two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.participants_container.three {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}

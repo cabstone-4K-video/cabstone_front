@@ -10,16 +10,16 @@ const UtilBar: React.FC = () => {
         <div className={classes.utilBarContainer}>
             <div className={classes.utilBarWrapper}>
                 <div className={classes.utilButtonBox}>
-                    <img className={classes.utilIcon} src={cameraIcon} alt='cameraButton' />
+									<img className={classes.utilIcon} src={cameraIcon} alt='cameraButton' />
                 </div>
                 <div className={classes.utilButtonBox}>
-                    <img className={classes.utilIcon} src={micIcon} alt='micButton' />
+									<img className={classes.utilIcon} src={micIcon} alt='micButton' />
                 </div>
                 <div className={classes.utilButtonBox}>
-                    <img className={classes.utilIcon} src={screenShareIcon} alt='screenSButton' />
+									<img className={classes.utilIcon} src={screenShareIcon} alt='screenSButton' />
                 </div>
                 <div className={classes.utilButtonBox}>
-                    <img className={classes.utilIcon} src={hangUpIcon} alt='exitButton' />
+									<img className={classes.utilIcon} src={hangUpIcon} alt='exitButton' />
                 </div>
             </div>
         </div>

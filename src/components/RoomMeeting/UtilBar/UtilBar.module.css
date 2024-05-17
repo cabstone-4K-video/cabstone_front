@@ -1,7 +1,7 @@
 .utilBarContainer {
 	padding: 10px;
 	margin: 20px;
-	background-color: #6C757D;
+	background-color: #191919;
 }
 
 .utilBarWrapper {
@@ -15,14 +15,25 @@
 	border-radius: 50%;
 	background-color: white;
 	margin: 20px;
-	width: 70px; /* 크기를 증가시킵니다. */
-	height: 70px; /* 크기를 증가시킵니다. */
-	display: flex; /* 정중앙에 위치시키기 위해 flexbox를 사용합니다. */
-	align-items: center; /* 세로 정중앙 정렬 */
-	justify-content: center; /* 가로 정중앙 정렬 */
+	width: 70px; 
+	height: 70px; 
+	display: flex; 
+	align-items: center; 
+	justify-content: center;
+	cursor: pointer;
 }
 
+.utilButtonBox:hover{
+	background-color: #ffffff80;
+	fill: white;
+}
+
+.utilButtonBox:hover .utilIcon {
+  filter: brightness(0) invert(1); /* 흰색으로 변경 */
+}
+
+
 .utilIcon {
-	width: 60%; /* 아이콘 크기를 버튼 크기에 비례하여 조정합니다. */
-	height: 60%; /* 아이콘 크기를 버튼 크기에 비례하여 조정합니다. */
+	width: 60%; 
+	height: 60%; 
 }
