@@ -1,9 +1,0 @@
-.videoContainer{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.videoContainer video{
-  width: 50%;
-}

@@ -1,0 +1,28 @@
+.utilBarContainer {
+	padding: 10px;
+	margin: 20px;
+	background-color: #6C757D;
+}
+
+.utilBarWrapper {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.utilButtonBox {
+	border-radius: 50%;
+	background-color: white;
+	margin: 20px;
+	width: 70px; /* 크기를 증가시킵니다. */
+	height: 70px; /* 크기를 증가시킵니다. */
+	display: flex; /* 정중앙에 위치시키기 위해 flexbox를 사용합니다. */
+	align-items: center; /* 세로 정중앙 정렬 */
+	justify-content: center; /* 가로 정중앙 정렬 */
+}
+
+.utilIcon {
+	width: 60%; /* 아이콘 크기를 버튼 크기에 비례하여 조정합니다. */
+	height: 60%; /* 아이콘 크기를 버튼 크기에 비례하여 조정합니다. */
+}

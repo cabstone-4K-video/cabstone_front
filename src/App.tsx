@@ -8,9 +8,7 @@ import SignUpPage from './pages/SignUpPage';
 import StartingPage from './pages/StartingPage';
 import RoomReadyPage from './pages/RoomReadyPage';
 import MainLayout from './layouts/MainLayout/MainLayout';
-import RoomMeeting from './components/RoomMeeting/ScreenShare/ScreenShare';
-
-import { useEffect } from 'react';
+import RoomMeeting from './components/RoomMeeting/RoomMeeting';
 
 interface PrivateRouteProps{
 	children : React.ReactElement;
@@ -18,7 +16,7 @@ interface PrivateRouteProps{
 
 const PrivateRoute : React.FC<PrivateRouteProps> = ({ children }) => {
 	const authenticated = localStorage.getItem('userToken');
-	if(authenticated){ //  !authenticated로 바꿔서.
+	if(authenticated){ //  !authenticated로 바꿔서 해야됨.
 		alert('로그인 후에 이용가능합니다.');
 		return <Navigate to="/login" />;
 	}
@@ -60,11 +58,6 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-
-	useEffect(() => {
-		const token = localStorage.getItem('userToken');
-		
-	})
 
   return (
     <>

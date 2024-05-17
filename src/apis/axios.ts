@@ -29,7 +29,6 @@ instance.interceptors.response.use(
   },
   (error: AxiosError) => {
     console.error('API call error:', error);
-    alert('An error occurred. Please try again.');
     return Promise.reject(error);
   }
 );
