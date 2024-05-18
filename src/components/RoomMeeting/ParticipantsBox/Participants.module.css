@@ -1,16 +1,18 @@
 .participants_container {
   display: grid;
   gap: 10px; 
+  min-height: 50vh;
+  padding: 10px;
 }
 
 .participant {
   background-color: #ddd;
-  padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 30vw;
 }
 
 

@@ -3,5 +3,8 @@
 	display: flex;
   align-items: center;
   justify-content: center;
+	margin-top: 10vh; 
+	/* margin은 조정필요 */
+	padding: 3vw;
 }
 
