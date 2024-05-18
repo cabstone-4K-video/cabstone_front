@@ -14,7 +14,7 @@ const RoomReady : React.FC = () => {
 	const navigate = useNavigate();
 
 	if (!location.state) {
-		navigate('/main/roomSelect');
+		navigate('/setting/roomSelect');
 		return null; // 추가적인 렌더링을 방지
 }
 

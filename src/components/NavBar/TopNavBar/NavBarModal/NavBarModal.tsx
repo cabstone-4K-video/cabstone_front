@@ -49,7 +49,7 @@ const NavBarModal: React.FC<PropsType> = ( { onClose } ) => {
 				<Divider/>
 				<div className={classes.contents}>
 					<h3 className={classes.content} onClick={() => navigate('/main/myPage')}>마이페이지</h3>
-					<h3 className={classes.content} onClick={() => navigate('/main/roomSelect')}>방 참여하기</h3>
+					<h3 className={classes.content} onClick={() => navigate('/setting/roomSelect')}>방 참여하기</h3>
 					<h3 className={classes.content} onClick={() => navigate('/main/')}>어떤 페이지 할지 고민</h3>
 				</div>
 			</div>

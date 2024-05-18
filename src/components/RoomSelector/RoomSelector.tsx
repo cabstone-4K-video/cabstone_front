@@ -21,7 +21,7 @@ const RoomSelector: React.FC = () => {
 	}
 
 	const handleJoinButton = async () => {
-		navigate('/main/roomReady' , { state : { roomName }});
+		navigate('/setting/roomReady' , { state : { roomName }});
 	}
 
 	return (
