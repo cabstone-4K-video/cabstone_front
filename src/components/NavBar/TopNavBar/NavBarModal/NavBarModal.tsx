@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import navBarIcon from '../../../../assets/NavBar/navBarIcon.png';
 import navBarIcon_hover from '../../../../assets/NavBar/navBarIcon_hover.png';
 import { useNavigate } from 'react-router-dom';
+import logOutIcon from '../../../../assets/icon/logoutIcon.svg';
 
 interface PropsType{
 	onClose : () => void;
@@ -29,6 +30,12 @@ const NavBarModal: React.FC<PropsType> = ( { onClose } ) => {
 
 	const navigate = useNavigate();
 
+	const handleLogout = () => {
+		localStorage.removeItem('userToken');
+		alert('로그아웃이 완료되었습니다.');
+		navigate('/login');
+	}
+
 	return (
 		<div className={classes.modalBackdrop} onClick={onClose}>
 			<div className={modalClass} onClick={e => e.stopPropagation()}>
@@ -52,7 +59,13 @@ const NavBarModal: React.FC<PropsType> = ( { onClose } ) => {
 					<h3 className={classes.content} onClick={() => navigate('/setting/roomSelect')}>방 참여하기</h3>
 					<h3 className={classes.content} onClick={() => navigate('/main/')}>어떤 페이지 할지 고민</h3>
 				</div>
+
+				<button className={classes.logoutButton} onClick={handleLogout}>
+					<img src={logOutIcon} alt='logoutIcon' className={classes.logOutIcon}/>
+					로그아웃
+				</button>
 			</div>
+			
 		</div>
 	)
 }

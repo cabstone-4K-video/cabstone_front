@@ -66,7 +66,9 @@
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  background-color: #191919;
+  background-color: #f0f0f0;
+	border-radius: 5px;
+	border: 2px solid transparent;
   color: white;
   border: none;
   cursor: pointer;
@@ -74,4 +76,16 @@
   align-items: center;
   justify-content: center;
   z-index: 1; /* 버튼이 항상 위에 표시되도록 */
+}
+
+.chatting_visibleButton:hover{
+	border: 2px solid #007bff;
+}
+
+.chatting_visibleButton_spreaded{
+	right: 20px;
+}
+
+.chattingIcon{
+	fill: white;
 }
