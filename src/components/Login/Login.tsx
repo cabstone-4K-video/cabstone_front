@@ -35,7 +35,7 @@ const Login : React.FC = () => {
       const { code, message, token } = response.data;
       if (code === '200' && token) {
         localStorage.setItem('userToken', token);
-        navigate('/main/roomSelect');
+        navigate('/setting/roomSelect');
       } else {
         setIsLoginError(true);
         alert(message);
