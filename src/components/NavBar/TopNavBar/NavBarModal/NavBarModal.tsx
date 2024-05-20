@@ -31,6 +31,7 @@ const NavBarModal: React.FC<PropsType> = ( { onClose } ) => {
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
+		prompt('로그아웃 하시겠습니까?');
 		localStorage.removeItem('userToken');
 		alert('로그아웃이 완료되었습니다.');
 		navigate('/login');
