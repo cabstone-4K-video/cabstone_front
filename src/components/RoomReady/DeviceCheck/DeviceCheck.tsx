@@ -69,6 +69,12 @@ const DeviceCheck: React.FC = () => {
 	
 	}, [selectedAudioDevice, selectedVideoDevice]);
 
+	useEffect(() => {
+		setUserName(connectionInfo.userName);
+		setSelectedAudioDevice(connectionInfo.audioDevice);
+		setSelectedVideoDevice(connectionInfo.videoDevice);
+	}, []);
+
 	return (
 		<div className={classes.wrapper}>
 			
