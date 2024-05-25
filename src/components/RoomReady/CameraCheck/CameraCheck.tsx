@@ -8,22 +8,30 @@ const CameraCheck: React.FC = () => {
 	const { videoDevice } = useSelector((state: RootState) => state.connectionInfo);
 
 	useEffect(() => {
+		let stream: MediaStream;
 		if (videoDevice) {
 			const constraints = {
-				video: { deviceId: { exact: videoDevice } },
-			};
+			video: { deviceId: { exact: videoDevice } },
+		};
 
-			navigator.mediaDevices.getUserMedia(constraints)
-				.then(stream => {
-					if (videoRef.current) {
-						videoRef.current.srcObject = stream;
-					}
-				})
-				.catch(error => {
-						console.error('Error accessing the camera.', error);
-				});
+		navigator.mediaDevices.getUserMedia(constraints)
+			.then(mediaStream => {
+				stream = mediaStream;
+				if (videoRef.current) {
+					videoRef.current.srcObject = stream;
+				}
+			})
+			.catch(error => {
+				console.error('Error accessing the camera.', error);
+			});
 		}
-	}, [videoDevice]);
+
+		return () => {
+			if (stream) {
+				stream.getTracks().forEach(track => track.stop());
+			}
+		};
+}, [videoDevice]);
 
 	return (
 		<>

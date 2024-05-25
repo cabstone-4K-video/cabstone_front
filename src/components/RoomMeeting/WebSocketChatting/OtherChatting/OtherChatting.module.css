@@ -1,4 +1,4 @@
-.my_speech_bubble {
+.other_speech_bubble {
   position:relative;
   margin: 50px;
   width:400px;
@@ -9,7 +9,7 @@
   justify-content: center;
   color: white;
  }
- .my_speech_bubble:after {
+ .other_speech_bubble:after {
   border-top: 15px solid #007bff;
   border-left: 15px solid transparent;
   border-right: 0px solid transparent;
