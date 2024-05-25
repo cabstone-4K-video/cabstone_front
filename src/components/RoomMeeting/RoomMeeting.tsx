@@ -14,7 +14,7 @@ const RoomMeeting: React.FC = () => {
   const [visibleChat, setVisibleChat] = useState<boolean>(false);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const [participants, setParticipants] = useState<string[]>([]);
+  const [participants, setParticipants] = useState<{ [key: string]: any }>({}); // Example participants object
 
   useEffect(() => {
     WebSocketService.connect('ws://localhost:8080/websocket');
@@ -32,7 +32,7 @@ const RoomMeeting: React.FC = () => {
     });
 
     WebSocketService.on('newParticipantArrived', (message: any) => {
-      setParticipants(prev => [...prev, message.name]);
+      setParticipants(prev => ({ ...prev, [message.name]: message }));
     });
 
     return () => {
@@ -56,7 +56,11 @@ const RoomMeeting: React.FC = () => {
   return (
     <div className={`${classes.container} ${visibleChat ? classes.containerCentered : classes.containerSpaceBetween}`}>
       <div className={`${classes.callBox} ${!visibleChat ? '' : classes.callBoxCentered}`}>
-        <ParticipantsBox />
+				<div className={classes.videoContainer}>
+					<video id="localVideo" ref={localVideoRef} autoPlay playsInline muted className={classes.localVideo} />
+					<video ref={remoteVideoRef} autoPlay playsInline className={classes.remoteVideo} />
+					<button onClick={startCall} className={classes.startButton}>Start Call</button>
+				</div>
         <UtilBar />
         <button
           className={`${classes.chatting_visibleButton} ${!visibleChat ? classes.chatting_visibleButton_spreaded : ''}`}
@@ -68,11 +72,7 @@ const RoomMeeting: React.FC = () => {
       <div className={`${classes.chatting} ${visibleChat ? classes.chatting_visible : classes.chatting_hidden}`}>
         <Chatting />
       </div>
-      <div className={classes.videoContainer}>
-        <video ref={localVideoRef} autoPlay playsInline muted className={classes.localVideo} />
-        <video ref={remoteVideoRef} autoPlay playsInline className={classes.remoteVideo} />
-        <button onClick={startCall} className={classes.startButton}>Start Call</button>
-      </div>
+      
     </div>
   );
 };
