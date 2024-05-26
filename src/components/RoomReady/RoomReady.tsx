@@ -31,7 +31,7 @@ const RoomReady : React.FC = () => {
 
 		const body = { roomName, userName };
 		try{
-			const response = await axios.post('/chat/creatroom', body);
+			const response = await axios.post('/chat/createroom', body);
 			navigate('/main/roomMeeting');
 		}
 		catch(error){

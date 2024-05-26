@@ -10,7 +10,7 @@ import axios from '../../apis/axios';
 const Login : React.FC = () => {
 	const [focused, setFocused] = useState<string | null>(null);
 	const [email, setEmail] = useState<string>('');
-	const [passWord, setPassWord] = useState<string>('');
+	const [password, setPassWord] = useState<string>('');
 	const [isLoginError, setIsLoginError] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false); 
 	
@@ -26,7 +26,7 @@ const Login : React.FC = () => {
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
-		const body = JSON.stringify({ email, passWord });	
+		const body = JSON.stringify({ email, password });	
 		setIsLoading(true);
 
 		try {
@@ -75,7 +75,7 @@ const Login : React.FC = () => {
 					placeholder='비밀번호를 입력해주세요'
 					onFocus={() => handleFocus('password')}
 					onBlur={handleBlur}
-					value={passWord}
+					value={password}
 					onChange={(e) => setPassWord(e.target.value)}
 				/>
 			</div>
