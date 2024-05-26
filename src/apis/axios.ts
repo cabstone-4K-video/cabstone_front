@@ -8,7 +8,7 @@ const instance = axios.create({
   },
 });
 
-// Request interceptor to add the token to the request headers
+//토큰을 포함한 요청일 때의 인터셉터
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('userToken');
@@ -22,7 +22,7 @@ instance.interceptors.request.use(
   }
 );
 
-// Response interceptor for error handling
+//에러 처리를 위한 인터셉터
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;

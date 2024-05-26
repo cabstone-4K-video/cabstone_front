@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from '../../../apis/axios';
 import classes from './Chatting.module.css';
 import MyChatting from './MyChatting/MyChatting';
 import OtherChatting from './OtherChatting/OtherChatting';
 import WebSocketService from './WebSocketService/WebSocketService';
 
-const Chatting : React.FC = () => {
+const Chatting: React.FC = () => {
   const [messages, setMessages] = useState<{ user: string, text: string }[]>([]);
   const [input, setInput] = useState<string>('');
-	const [userName, setUserName] = useState<string>(''); // 이미 connectionInfo를 통해 받아온 유저이름
+  const userName = localStorage.getItem('userName') || ''; // connectionInfo에서 가져온 유저 이름으로 변경하기
 
-	useEffect(() => {
-    WebSocketService.connect('ws://localhost:8080/chat');
-    
+  useEffect(() => {
+    WebSocketService.connect('ws://localhost:8080/ws');
+
     WebSocketService.on('message', (data: any) => {
       setMessages(prevMessages => [...prevMessages, data]);
     });
@@ -23,12 +24,17 @@ const Chatting : React.FC = () => {
     };
   }, []);
 
-	const sendMessage = () => {
+  const sendMessage = async () => {
     if (input.trim() === '') return;
     const message = { user: userName, text: input };
-    WebSocketService.send({ id: 'message', ...message });
-    setMessages(prevMessages => [...prevMessages, message]);
-    setInput('');
+    try {
+      await axios.post('/chat/sendMessage', message);
+      WebSocketService.send({ type: 'message', ...message });
+      setMessages(prevMessages => [...prevMessages, message]);
+      setInput('');
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   return (
@@ -47,7 +53,7 @@ const Chatting : React.FC = () => {
       />
       <button onClick={sendMessage} className={classes.sendButton}>Send</button>
     </div>
-  )
-}
+  );
+};
 
 export default Chatting;

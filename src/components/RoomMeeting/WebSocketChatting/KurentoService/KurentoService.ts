@@ -43,7 +43,7 @@ class KurentoService {
     }
   }
 
-	async createOffer() {
+  async createOffer() {
     if (this.peerConnection) {
       const offer = await this.peerConnection.createOffer();
       await this.peerConnection.setLocalDescription(offer);
@@ -84,6 +84,14 @@ class KurentoService {
       this.localStream = null;
     }
     this.remoteStream = null;
+  }
+
+  getPeerConnection() {
+    return this.peerConnection;
+  }
+
+  getLocalStream() {
+    return this.localStream;
   }
 }
 
