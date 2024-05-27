@@ -7,7 +7,7 @@ import UserInfoLayout from './layouts/UserInfoLayout/UserInfoLayout';
 import SignUpPage from './pages/SignUpPage';
 import StartingPage from './pages/StartingPage';
 import RoomReadyPage from './pages/RoomReadyPage';
-import RoomMeeting from './components/RoomMeeting/RoomMeeting';
+import RoomMeeting from './components/RoomMeeting/VideoRoomComponent';
 import SettingLayout from './layouts/SettingLayout/SettingLayout';
 import MainLayout from './layouts/MainLayout/MainLayout';
 
