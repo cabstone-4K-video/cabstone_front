@@ -20,8 +20,8 @@ const RoomReady : React.FC = () => {
 	if (!location.state) {
 		navigate('/setting/roomSelect');
 		return null; // 추가적인 렌더링을 방지
-}
-
+	}
+	
 	const { roomName } = location.state as { roomName: string };
 	const userName = useSelector((state : RootState) => state.connectionInfo.userName);
 
