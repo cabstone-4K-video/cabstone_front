@@ -1,183 +1,83 @@
-import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import {
-	OpenVidu,
-	Session as OVSession,
-	Publisher,
-	Subscriber,
-} from 'openvidu-browser';
-import axios, { AxiosError } from 'axios';
-import Form from './Form';
-import Session from './Session';
+import React, { useEffect, useRef, useState } from 'react';
+import { OpenVidu, Publisher, Session, StreamManager } from 'openvidu-browser';
 
-function BookclubMeeting() {
-	const [session, setSession] = useState<OVSession | ''>('');
-	const [sessionId, setSessionId] = useState<string>('');
-	const [subscriber, setSubscriber] = useState<Subscriber | null>(null);
-	const [publisher, setPublisher] = useState<Publisher | null>(null);
-	const [OV, setOV] = useState<OpenVidu | null>(null);
+const VideoCall: React.FC = () => {
+  const [session, setSession] = useState<Session | null>(null);
+  const [mainStreamManager, setMainStreamManager] = useState<StreamManager | null>(null);
+  const [publisher, setPublisher] = useState<Publisher | null>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
 
-	const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-	const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
+  useEffect(() => {
+    const OV = new OpenVidu();
+    const newSession = OV.initSession();
 
-	const leaveSession = useCallback(() => {
-		if (session) session.disconnect();
+    newSession.on('streamCreated', (event: any) => {
+      const subscriber = newSession.subscribe(event.stream, undefined);
+      setMainStreamManager(subscriber);
+    });
 
-		setOV(null);
-		setSession('');
-		setSessionId('');
-		setSubscriber(null);
-		setPublisher(null);
-	}, [session]);
+    setSession(newSession);
 
-	const joinSession = () => {
-		const OVs = new OpenVidu();
-		setOV(OVs);
-		setSession(OVs.initSession());
-	};
+    return () => {
+      if (session) {
+        session.disconnect();
+      }
+    };
+  }, []);
 
-	useEffect(() => {
-		window.addEventListener('beforeunload', leaveSession);
+  const joinSession = async () => {
+    if (session) {
+      try {
+        const token = await getToken();
+        await session.connect(token, { clientData: 'React_User' });
 
-		return () => {
-			window.removeEventListener('beforeunload', leaveSession);
-		};
-	}, [leaveSession]);
+        const OV = new OpenVidu();
+        const newPublisher = OV.initPublisher(undefined, {
+          audioSource: undefined,
+          videoSource: undefined,
+          publishAudio: true,
+          publishVideo: true,
+          resolution: '640x480',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false,
+        });
 
-	const sessionIdChangeHandler = (
-		event: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		setSessionId(event.target.value);
-	};
+        session.publish(newPublisher);
+        setPublisher(newPublisher);
+        setMainStreamManager(newPublisher);
+      } catch (error) {
+        console.error('There was an error connecting to the session:', error);
+      }
+    }
+  };
 
-	useEffect(() => {
-		if (session === '') return;
+  const getToken = async (): Promise<string> => {
+    const response = await fetch('http://localhost:5000/get-token', {
+      method: 'POST',
+    });
+    const data = await response.json();
+    return data.token;
+  };
 
-		session.on('streamDestroyed', event => {
-			if (subscriber && event.stream.streamId === subscriber.stream.streamId) {
-				setSubscriber(null);
-			}
-		});
-	}, [subscriber, session]);
+  return (
+    <div>
+      <button onClick={joinSession}>Join Session</button>
+      <div ref={videoRef}></div>
+      {mainStreamManager && (
+        <div>
+          <video
+            autoPlay={true}
+            ref={(videoElement) => {
+              if (videoElement) {
+                mainStreamManager.addVideoElement(videoElement);
+              }
+            }}
+          ></video>
+        </div>
+      )}
+    </div>
+  );
+};
 
-	useEffect(() => {
-		if (session === '') return;
-
-		session.on('streamCreated', event => {
-			const subscribers = session.subscribe(event.stream, '');
-			setSubscriber(subscribers);
-		});
-
-		const createSession = async (sessionIds: string): Promise<string> => {
-			try {
-				const data = JSON.stringify({ customSessionId: sessionIds });
-				const response = await axios.post(
-					`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
-					data,
-					{
-						headers: {
-							Authorization: `Basic ${btoa(
-								`OPENVIDUAPP:${OPENVIDU_SERVER_SECRET}`,
-							)}`,
-							'Content-Type': 'application/json',
-						},
-					},
-				);
-
-				return (response.data as { id: string }).id;
-			} catch (error) {
-				const errorResponse = (error as AxiosError)?.response;
-
-				if (errorResponse?.status === 409) {
-					return sessionIds;
-				}
-
-				return '';
-			}
-		};
-
-		const createToken = (sessionIds: string): Promise<string> => {
-			
-
-			return new Promise((resolve, reject) => {
-				const data = {};
-				axios
-					.post(
-						`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionIds}/connection`,
-						data,
-						{
-							headers: {
-								Authorization: `Basic ${btoa(
-									`OPENVIDUAPP:${OPENVIDU_SERVER_SECRET}`,
-								)}`,
-
-								'Content-Type': 'application/json',
-							},
-						},
-					)
-					.then(response => {
-						resolve((response.data as { token: string }).token);
-					})
-					.catch(error => reject(error));
-			});
-		};
-
-		const getToken = async (): Promise<string> => {
-			try {
-				const sessionIds = await createSession(sessionId);
-				const token = await createToken(sessionIds);
-				return token;
-			} catch (error) {
-				throw new Error('Failed to get token.');
-			}
-		};
-
-		getToken()
-			.then(token => {
-				session
-					.connect(token)
-					.then(() => {
-						if (OV) {
-							const publishers = OV.initPublisher(undefined, {
-								audioSource: undefined,
-								videoSource: undefined,
-								publishAudio: true,
-								publishVideo: true,
-								mirror: true,
-							});
-
-							setPublisher(publishers);
-							session
-								.publish(publishers)
-								.then(() => {})
-								.catch(() => {});
-						}
-					})
-					.catch(() => {});
-			})
-			.catch(() => {});
-	}, [session, OV, sessionId, OPENVIDU_SERVER_URL]);
-
-	return (
-		<div>
-			<h1>진행화면</h1>
-			<>
-				{!session && (
-					<Form
-						joinSession={joinSession}
-						sessionId={sessionId}
-						sessionIdChangeHandler={sessionIdChangeHandler}
-					/>
-				)}
-				{session && (
-					<Session
-						publisher={publisher as Publisher}
-						subscriber={subscriber as Subscriber}
-					/>
-				)}
-			</>
-		</div>
-	);
-}
-
-export default BookclubMeeting;
+export default VideoCall;
