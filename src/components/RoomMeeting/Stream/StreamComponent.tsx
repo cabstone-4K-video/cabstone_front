@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import './StreamComponent.css';
 import OvVideoComponent from './OvVideo';
 
@@ -13,52 +14,35 @@ import IconButton from '@mui/material/IconButton';
 import HighlightOff from '@mui/icons-material/HighlightOff';
 import FormHelperText from '@mui/material/FormHelperText';
 
-interface StreamManager {
-    addVideoElement: (element: HTMLVideoElement) => void;
-    session: {
-        on: (event: string, callback: (event: any) => void) => void;
-    };
-    stream: {
-        streamId: string;
-    };
-}
-
-interface User {
-    streamManager: StreamManager;
-    getStreamManager: () => StreamManager;
-    getNickname: () => string;
-    isLocal: () => boolean;
-    isVideoActive: () => boolean;
-    isAudioActive: () => boolean;
-}
-
-interface Props {
-    user: User;
+interface StreamComponentProps {
+    user: any; // 정확한 타입을 알고 있다면 any 대신 그 타입을 사용하세요
     handleNickname: (nickname: string) => void;
 }
 
-const StreamComponent: React.FC<Props> = ({ user, handleNickname }) => {
+const StreamComponent: React.FC<StreamComponentProps> = ({ user, handleNickname }) => {
     const [nickname, setNickname] = useState<string>(user.getNickname());
     const [showForm, setShowForm] = useState<boolean>(false);
     const [mutedSound, setMutedSound] = useState<boolean>(false);
     const [isFormValid, setIsFormValid] = useState<boolean>(true);
 
-    const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setNickname(event.target.value);
-    }, []);
+        event.preventDefault();
+    };
 
-    const toggleNicknameForm = useCallback(() => {
+    const toggleNicknameForm = () => {
         if (user.isLocal()) {
             setShowForm(!showForm);
         }
-    }, [user, showForm]);
+    };
 
-    const toggleSound = useCallback(() => {
+    const toggleSound = () => {
         setMutedSound(!mutedSound);
-    }, [mutedSound]);
+    };
 
-    const handlePressKey = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handlePressKey = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
+            console.log(nickname);
             if (nickname.length >= 3 && nickname.length <= 20) {
                 handleNickname(nickname);
                 toggleNicknameForm();
@@ -67,14 +51,14 @@ const StreamComponent: React.FC<Props> = ({ user, handleNickname }) => {
                 setIsFormValid(false);
             }
         }
-    }, [nickname, handleNickname, toggleNicknameForm]);
+    };
 
     return (
         <div className="OT_widget-container">
             <div className="pointer nickname">
                 {showForm ? (
                     <FormControl id="nicknameForm">
-                        <IconButton id="closeButton" onClick={toggleNicknameForm}>
+                        <IconButton color="inherit" id="closeButton" onClick={toggleNicknameForm}>
                             <HighlightOff />
                         </IconButton>
                         <InputLabel htmlFor="name-simple" id="label">
@@ -106,17 +90,16 @@ const StreamComponent: React.FC<Props> = ({ user, handleNickname }) => {
                 <div className="streamComponent">
                     <OvVideoComponent user={user} mutedSound={mutedSound} />
                     <div id="statusIcons">
-                        {!user.isVideoActive() ? (
+                        {!user.isVideoActive() && (
                             <div id="camIcon">
                                 <VideocamOff id="statusCam" />
                             </div>
-                        ) : null}
-
-                        {!user.isAudioActive() ? (
+                        )}
+                        {!user.isAudioActive() && (
                             <div id="micIcon">
                                 <MicOff id="statusMic" />
                             </div>
-                        ) : null}
+                        )}
                     </div>
                     <div>
                         {!user.isLocal() && (

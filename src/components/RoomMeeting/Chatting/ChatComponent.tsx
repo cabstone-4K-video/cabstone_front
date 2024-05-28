@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent, KeyboardEvent } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Fab from '@mui/material/Fab';
 import HighlightOff from '@mui/icons-material/HighlightOff';
@@ -9,24 +9,30 @@ import './ChatComponent.css';
 interface ChatComponentProps {
     user: any;
     chatDisplay: string;
+    close: (value: undefined) => void;
     messageReceived: () => void;
-    close: (param: any) => void;
 }
 
-const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, messageReceived, close }) => {
-    const [messageList, setMessageList] = useState<any[]>([]);
-    const [message, setMessage] = useState('');
+interface Message {
+    connectionId: string;
+    nickname: string;
+    message: string;
+}
+
+const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, close, messageReceived }) => {
+    const [messageList, setMessageList] = useState<Message[]>([]);
+    const [message, setMessage] = useState<string>('');
     const chatScroll = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleSignalChat = (event: any) => {
+        const session = user.getStreamManager().stream.session;
+        const messageHandler = (event: any) => {
             const data = JSON.parse(event.data);
-            setMessageList((prevMessageList) => [
-                ...prevMessageList,
-                { connectionId: event.from.connectionId, nickname: data.nickname, message: data.message }
-            ]);
+            const newMessageList = [...messageList, { connectionId: event.from.connectionId, nickname: data.nickname, message: data.message }];
+            setMessageList(newMessageList);
+            const document = window.document;
             setTimeout(() => {
-                const userImg = document.getElementById('userImg-' + (messageList.length - 1)) as HTMLCanvasElement;
+                const userImg = document.getElementById('userImg-' + (newMessageList.length - 1)) as HTMLCanvasElement;
                 const video = document.getElementById('video-' + data.streamId) as HTMLVideoElement;
                 const avatar = userImg.getContext('2d');
                 if (avatar && video) {
@@ -37,17 +43,18 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, messag
             scrollToBottom();
         };
 
-        user.getStreamManager().stream.session.on('signal:chat', handleSignalChat);
-        return () => {
-            user.getStreamManager().stream.session.off('signal:chat', handleSignalChat);
-        };
-    }, [user, messageList, messageReceived]);
+        session.on('signal:chat', messageHandler);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        return () => {
+            session.off('signal:chat', messageHandler);
+        };
+    }, [messageList, user, messageReceived]);
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value);
     };
 
-    const handlePressKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handlePressKey = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             sendMessage();
         }
@@ -55,13 +62,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, messag
 
     const sendMessage = () => {
         if (user && message) {
-            let trimmedMessage = message.replace(/ +(?= )/g, '');
-            if (trimmedMessage !== '' && trimmedMessage !== ' ') {
-                const data = {
-                    message: trimmedMessage,
-                    nickname: user.getNickname(),
-                    streamId: user.getStreamManager().stream.streamId
-                };
+            let trimmedMessage = message.trim();
+            if (trimmedMessage !== '') {
+                const data = { message: trimmedMessage, nickname: user.getNickname(), streamId: user.getStreamManager().stream.streamId };
                 user.getStreamManager().stream.session.signal({
                     data: JSON.stringify(data),
                     type: 'chat',
@@ -73,11 +76,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, messag
 
     const scrollToBottom = () => {
         setTimeout(() => {
-            try {
-                if (chatScroll.current) {
-                    chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
-                }
-            } catch (err) {}
+            if (chatScroll.current) {
+                chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
+            }
         }, 20);
     };
 
@@ -85,11 +86,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, messag
         close(undefined);
     };
 
-    const styleChat = { display: chatDisplay };
-
     return (
         <div id="chatContainer">
-            <div id="chatComponent" style={styleChat}>
+            <div id="chatComponent" style={{ display: chatDisplay }}>
                 <div id="chatToolbar">
                     <span>{user.getStreamManager().stream.session.sessionId} - CHAT</span>
                     <IconButton id="closeButton" onClick={handleClose}>
@@ -118,6 +117,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ user, chatDisplay, messag
                         </div>
                     ))}
                 </div>
+
                 <div id="messageInput">
                     <input
                         placeholder="Send a message"

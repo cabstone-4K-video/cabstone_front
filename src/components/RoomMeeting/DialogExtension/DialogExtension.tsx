@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -11,12 +11,12 @@ interface Props {
     cancelClicked: () => void;
 }
 
-const DialogExtensionComponent: React.FC<Props> = (props) => {
+const DialogExtensionComponent: React.FC<Props> = ({ showDialog, cancelClicked }) => {
     const openviduExtensionUrl = 'https://chrome.google.com/webstore/detail/openvidu-screensharing/lfcgfepafnobdloecchnfaclibenjold';
     const [isInstalled, setIsInstalled] = useState<boolean>(false);
 
     const onNoClick = () => {
-        props.cancelClicked();
+        cancelClicked();
     };
 
     const goToChromePage = () => {
@@ -30,7 +30,7 @@ const DialogExtensionComponent: React.FC<Props> = (props) => {
 
     return (
         <div>
-            {props.showDialog ? (
+            {showDialog ? (
                 <div id="dialogExtension">
                     <Card id="card">
                         <CardContent>
@@ -43,15 +43,14 @@ const DialogExtensionComponent: React.FC<Props> = (props) => {
                             <Button size="small" onClick={onNoClick}>
                                 Cancel
                             </Button>
-
                             <Button size="small" onClick={goToChromePage}>
                                 Install
                             </Button>
-                            {isInstalled ? (
+                            {isInstalled && (
                                 <Button size="small" onClick={refreshBrowser}>
                                     Refresh
                                 </Button>
-                            ) : null}
+                            )}
                         </CardActions>
                     </Card>
                 </div>

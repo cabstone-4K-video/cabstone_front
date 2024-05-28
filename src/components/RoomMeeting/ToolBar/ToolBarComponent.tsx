@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import './ToolBarComponent.css';
+import React, { useState } from 'react';
+import './ToolbarComponent.css';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-
 import Mic from '@mui/icons-material/Mic';
 import MicOff from '@mui/icons-material/MicOff';
 import Videocam from '@mui/icons-material/Videocam';
@@ -17,20 +16,12 @@ import StopScreenShare from '@mui/icons-material/StopScreenShare';
 import Tooltip from '@mui/material/Tooltip';
 import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew';
 import QuestionAnswer from '@mui/icons-material/QuestionAnswer';
-
 import IconButton from '@mui/material/IconButton';
-
 import logo from '../../../assets/logo.png';
 
-//로고 부분 수정하기
-
-interface Props {
+interface ToolbarComponentProps {
     sessionId: string;
-    user: {
-        isAudioActive: () => boolean;
-        isVideoActive: () => boolean;
-        isScreenShareActive: () => boolean;
-    };
+    user: any; // 정확한 타입을 알고 있다면 any 대신 그 타입을 사용하세요
     micStatusChanged: () => void;
     camStatusChanged: () => void;
     screenShare: () => void;
@@ -42,7 +33,7 @@ interface Props {
     showNotification: boolean;
 }
 
-const ToolbarComponent: React.FC<Props> = ({
+const ToolbarComponent: React.FC<ToolbarComponentProps> = ({
     sessionId,
     user,
     micStatusChanged,
@@ -53,76 +44,69 @@ const ToolbarComponent: React.FC<Props> = ({
     switchCamera,
     leaveSession,
     toggleChat,
-    showNotification
+    showNotification,
 }) => {
     const [fullscreen, setFullscreen] = useState<boolean>(false);
 
-    const handleMicStatusChanged = useCallback(() => {
+    const handleMicStatusChanged = () => {
         micStatusChanged();
-    }, [micStatusChanged]);
+    };
 
-    const handleCamStatusChanged = useCallback(() => {
+    const handleCamStatusChanged = () => {
         camStatusChanged();
-    }, [camStatusChanged]);
+    };
 
-    const handleScreenShare = useCallback(() => {
+    const handleScreenShare = () => {
         screenShare();
-    }, [screenShare]);
+    };
 
-    const handleStopScreenShare = useCallback(() => {
+    const handleStopScreenShare = () => {
         stopScreenShare();
-    }, [stopScreenShare]);
+    };
 
-    const handleToggleFullscreen = useCallback(() => {
+    const handleToggleFullscreen = () => {
         setFullscreen(!fullscreen);
         toggleFullscreen();
-    }, [fullscreen, toggleFullscreen]);
+    };
 
-    const handleSwitchCamera = useCallback(() => {
+    const handleSwitchCamera = () => {
         switchCamera();
-    }, [switchCamera]);
+    };
 
-    const handleLeaveSession = useCallback(() => {
+    const handleLeaveSession = () => {
         leaveSession();
-    }, [leaveSession]);
+    };
 
-    const handleToggleChat = useCallback(() => {
+    const handleToggleChat = () => {
         toggleChat();
-    }, [toggleChat]);
+    };
 
     return (
         <AppBar className="toolbar" id="header">
             <Toolbar className="toolbar">
                 <div id="navSessionInfo">
-                    <img
-                        id="header_img"
-                        alt="OpenVidu Logo"
-                        src={logo}
-                    />
-
-                    {sessionId && <div id="titleContent">
-                        <span id="session-title">{sessionId}</span>
-                    </div>}
+                    <img id="header_img" alt="OpenVidu Logo" src={logo} />
+                    {sessionId && (
+                        <div id="titleContent">
+                            <span id="session-title">{sessionId}</span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="buttonsContent">
                     <IconButton color="inherit" className="navButton" id="navMicButton" onClick={handleMicStatusChanged}>
-                        {user.isAudioActive() ? <Mic /> : <MicOff color="secondary" />}
+                        {user && user.isAudioActive() ? <Mic /> : <MicOff color="secondary" />}
                     </IconButton>
 
                     <IconButton color="inherit" className="navButton" id="navCamButton" onClick={handleCamStatusChanged}>
-                        {user.isVideoActive() ? (
-                            <Videocam />
-                        ) : (
-                            <VideocamOff color="secondary" />
-                        )}
+                        {user && user.isVideoActive() ? <Videocam /> : <VideocamOff color="secondary" />}
                     </IconButton>
 
                     <IconButton color="inherit" className="navButton" onClick={handleScreenShare}>
-                        {user.isScreenShareActive() ? <PictureInPicture /> : <ScreenShare />}
+                        {user && user.isScreenShareActive() ? <PictureInPicture /> : <ScreenShare />}
                     </IconButton>
 
-                    {user.isScreenShareActive() && (
+                    {user && user.isScreenShareActive() && (
                         <IconButton onClick={handleStopScreenShare} id="navScreenButton">
                             <StopScreenShare color="secondary" />
                         </IconButton>
@@ -132,7 +116,7 @@ const ToolbarComponent: React.FC<Props> = ({
                         <SwitchVideoIcon />
                     </IconButton>
                     <IconButton color="inherit" className="navButton" onClick={handleToggleFullscreen}>
-                        {fullscreen ? <FullscreenExit /> : <Fullscreen />}
+                        {user && fullscreen ? <FullscreenExit /> : <Fullscreen />}
                     </IconButton>
                     <IconButton color="secondary" className="navButton" onClick={handleLeaveSession} id="navLeaveButton">
                         <PowerSettingsNew />

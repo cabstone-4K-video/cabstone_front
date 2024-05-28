@@ -4,7 +4,7 @@ class UserModel {
 	videoActive: boolean;
 	screenShareActive: boolean;
 	nickname: string;
-	streamManager: any; // You may want to define a specific type here
+	streamManager: any; // 정확한 타입을 알면 any 대신 그 타입을 사용하세요
 	type: 'remote' | 'local';
 
 	constructor() {
@@ -37,7 +37,7 @@ class UserModel {
 			return this.nickname;
 	}
 
-	getStreamManager(): any { // You may want to define a specific type here
+	getStreamManager(): any {
 			return this.streamManager;
 	}
 
@@ -61,7 +61,7 @@ class UserModel {
 			this.screenShareActive = isScreenShareActive;
 	}
 
-	setStreamManager(streamManager: any): void { // You may want to define a specific type here
+	setStreamManager(streamManager: any): void {
 			this.streamManager = streamManager;
 	}
 
@@ -78,18 +78,6 @@ class UserModel {
 					this.type = type;
 			}
 	}
-
-	clone(): UserModel {
-		const clone = new UserModel();
-		clone.connectionId = this.connectionId;
-		clone.audioActive = this.audioActive;
-		clone.videoActive = this.videoActive;
-		clone.screenShareActive = this.screenShareActive;
-		clone.nickname = this.nickname;
-		clone.streamManager = this.streamManager;
-		clone.type = this.type;
-		return clone;
-}
 }
 
 export default UserModel;
