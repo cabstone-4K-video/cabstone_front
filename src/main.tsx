@@ -5,7 +5,7 @@ import './index.css'
 import { Provider } from 'react-redux'
 import { store, persistor } from './store/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
-import registerServiceWorker from './registerServiceWorker.ts';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration.ts'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   
@@ -16,4 +16,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 	</Provider>
 )
 
-registerServiceWorker();
+serviceWorkerRegistration.unregister()
