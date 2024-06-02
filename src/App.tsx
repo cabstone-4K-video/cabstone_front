@@ -1,4 +1,5 @@
-
+import '@babel/polyfill';
+import 'regenerator-runtime/runtime'; // 이 줄도 포함합니다.
 import './App.css'
 import { createBrowserRouter, Navigate, RouterProvider, } from 'react-router-dom';
 import RoomSelectPage from './pages/RoomSelectPage';
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
 	},
 
 	{
-		path : 'uiTest',
+		path : '/uiTest',
 		element : <UITest/>
 	}
 
