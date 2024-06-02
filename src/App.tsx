@@ -10,6 +10,7 @@ import RoomReadyPage from './pages/RoomReadyPage';
 import RoomMeeting from './components/RoomMeeting/RoomMeeting';
 import SettingLayout from './layouts/SettingLayout/SettingLayout';
 import MainLayout from './layouts/MainLayout/MainLayout';
+import UITest from './components/RoomMeeting/UITest';
 
 interface PrivateRouteProps{
 	children : React.ReactElement;
@@ -59,6 +60,11 @@ const router = createBrowserRouter([
 				element : <RoomMeeting/>
 			}
 		]
+	},
+
+	{
+		path : 'uiTest',
+		element : <UITest/>
 	}
 
 ])
