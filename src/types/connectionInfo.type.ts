@@ -3,6 +3,8 @@ interface ConnectionInfo{
 	videoDevice : string;
 	audioDevice : string;
 	roomName : string;
+	microphoneEnabled: boolean,
+  cameraEnabled: boolean,
 }
 
 export default ConnectionInfo;

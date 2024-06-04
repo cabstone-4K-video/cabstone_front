@@ -5,6 +5,7 @@ import styles from './RoomMeeting.module.css';
 import UserVideoComponent from './UserVideo/UserVideoComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import ToolBar from './ToolBar/ToolBar';
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
@@ -17,6 +18,7 @@ const RoomMeeting: React.FC = () => {
     const [publisher, setPublisher] = useState<any>();
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [currentVideoDevice, setCurrentVideoDevice] = useState<any>();
+		const [chatVisible, setChatVisible] = useState<boolean>(false);
 
     const OV = useRef(new OpenVidu());
 
@@ -121,6 +123,7 @@ const RoomMeeting: React.FC = () => {
         }
     }, [currentVideoDevice, session, mainStreamManager]);
 
+
     const deleteSubscriber = useCallback((streamManager: any) => {
         setSubscribers((prevSubscribers) => {
             const index = prevSubscribers.indexOf(streamManager);
@@ -169,46 +172,40 @@ const RoomMeeting: React.FC = () => {
         joinSession();
     }, [joinSession]);
 
+
+		const shareScreen = () => {
+			// 화면 공유 기능 구현
+		};
+
+		const toggleChat = () => {
+			setChatVisible(!chatVisible);
+		};
+
     return (
         <div className={styles.container}>
-            <div className={styles.sessionHeader}>
-                <h1 className={styles.sessionTitle}>{roomName}</h1>
-                <input
-                    className={`${styles.btn} ${styles.btnLarge} ${styles.btnDanger}`}
-                    type="button"
-                    id="buttonLeaveSession"
-                    onClick={leaveSession}
-                    value="Leave session"
-                />
-                <input
-                    className={`${styles.btn} ${styles.btnLarge} ${styles.btnSuccess}`}
-                    type="button"
-                    id="buttonSwitchCamera"
-                    onClick={switchCamera}
-                    value="Switch Camera"
-                />
+            <div className={styles.videoContainer}>
+                <div className={styles.mainVideoContainer}>
+                    {mainStreamManager !== undefined && (
+                        <UserVideoComponent streamManager={mainStreamManager} />
+                    )}
+                </div>
+                <div className={styles.subscribersContainer}>
+                    {subscribers.map((sub) => (
+                        <div key={sub.stream.connection.connectionId} className={styles.subscriber}>
+                            <UserVideoComponent streamManager={sub} />
+                        </div>
+                    ))}
+                </div>
             </div>
-
-            {mainStreamManager !== undefined ? (
-							<div id="main-video" className="col-md-6">
-								<UserVideoComponent streamManager={mainStreamManager} />
-							</div>
-						) : null}
-						<div id="video-container" className="col-md-6">
-								{publisher !== undefined && mainStreamManager !== publisher ? (
-									<div className={`${styles.streamContainer} col-md-6 col-xs-6`} onClick={() => handleMainVideoStream(publisher)}>
-										<UserVideoComponent streamManager={publisher} />
-									</div>
-								) : null}
-								{subscribers.map((sub, i) => (
-									<div key={sub.id} className={`${styles.streamContainer} col-md-6 col-xs-6`} onClick={() => handleMainVideoStream(sub)}>
-										<span>{sub.id}</span>
-										<UserVideoComponent streamManager={sub} />
-									</div>
-								))}
-						</div>
+            <ToolBar
+                switchCamera={switchCamera}
+                leaveSession={leaveSession}
+                shareScreen={shareScreen}
+                roomName={roomName}  // Pass roomName as a prop
+								toggleChat={toggleChat}
+						/>
         </div>
     );
-}
+};
 
 export default RoomMeeting;

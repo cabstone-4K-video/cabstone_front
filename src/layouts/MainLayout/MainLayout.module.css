@@ -1,7 +1,14 @@
 
-.contents{
+.layout {
 	display: flex;
-  align-items: center;
-  justify-content: center;
+	flex-direction: column;
+	height: 100vh;
+	margin: 0 auto;
+	position: relative;
 }
 
+.contents {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
