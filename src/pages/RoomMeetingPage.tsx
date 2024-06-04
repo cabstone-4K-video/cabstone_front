@@ -1,9 +1,9 @@
-import RoomMeeting from "../components/RoomMeeting/RoomMeeting";
+import VideoRoomComponent from "../components/RoomMeeting/components/VideoRoomComponent";
 
 const RoomMeetingPage : React.FC = () => {
   return (
     <>
-      <RoomMeeting/>
+			<VideoRoomComponent/>
     </>
   )
 }
