@@ -1,10 +1,10 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import styles from './RoomMeeting.module.css';
-import UserVideoComponent from './UserVideo/UserVideoComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import styles from './RoomMeeting.module.css';
+import UserVideoComponent from './UserVideo/UserVideoComponent';
 import ToolBar from './ToolBar/ToolBar';
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
@@ -18,7 +18,7 @@ const RoomMeeting: React.FC = () => {
     const [publisher, setPublisher] = useState<any>();
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [currentVideoDevice, setCurrentVideoDevice] = useState<any>();
-		const [chatVisible, setChatVisible] = useState<boolean>(false);
+    const [screenSharing, setScreenSharing] = useState(false);
 
     const OV = useRef(new OpenVidu());
 
@@ -91,6 +91,7 @@ const RoomMeeting: React.FC = () => {
         setSubscribers([]);
         setMainStreamManager(undefined);
         setPublisher(undefined);
+        setScreenSharing(false);
     }, [session]);
 
     const switchCamera = useCallback(async () => {
@@ -123,7 +124,6 @@ const RoomMeeting: React.FC = () => {
         }
     }, [currentVideoDevice, session, mainStreamManager]);
 
-
     const deleteSubscriber = useCallback((streamManager: any) => {
         setSubscribers((prevSubscribers) => {
             const index = prevSubscribers.indexOf(streamManager);
@@ -137,16 +137,50 @@ const RoomMeeting: React.FC = () => {
         });
     }, []);
 
-    useEffect(() => {
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            leaveSession();
-        };
-        window.addEventListener('beforeunload', handleBeforeUnload);
+    const shareScreen = useCallback(async () => {
+        if (!screenSharing) {
+            try {
+                const newPublisher = OV.current.initPublisher(undefined, {
+                    videoSource: 'screen',
+                    publishAudio: true,
+                    publishVideo: true,
+                    mirror: false
+                });
 
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, [leaveSession]);
+                if (session) {
+                    await session.unpublish(mainStreamManager);
+                    await session.publish(newPublisher);
+                    setMainStreamManager(newPublisher);
+                    setPublisher(newPublisher);
+                    setScreenSharing(true);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        } else {
+            try {
+                const devices = await OV.current.getDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+                const newPublisher = OV.current.initPublisher(undefined, {
+                    videoSource: videoDevices[0].deviceId,
+                    publishAudio: true,
+                    publishVideo: true,
+                    mirror: false
+                });
+
+                if (session) {
+                    await session.unpublish(mainStreamManager);
+                    await session.publish(newPublisher);
+                    setMainStreamManager(newPublisher);
+                    setPublisher(newPublisher);
+                    setScreenSharing(false);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }, [screenSharing, session, mainStreamManager]);
 
     const getToken = useCallback(async () => {
         return createSession(roomName).then(sessionId =>
@@ -172,26 +206,22 @@ const RoomMeeting: React.FC = () => {
         joinSession();
     }, [joinSession]);
 
-
-		const shareScreen = () => {
-			// 화면 공유 기능 구현
-		};
-
-		const toggleChat = () => {
-			setChatVisible(!chatVisible);
-		};
-
     return (
         <div className={styles.container}>
             <div className={styles.videoContainer}>
-                <div className={styles.mainVideoContainer}>
-                    {mainStreamManager !== undefined && (
+                {screenSharing && mainStreamManager ? (
+                    <div className={styles.screenShare}>
                         <UserVideoComponent streamManager={mainStreamManager} />
-                    )}
-                </div>
-                <div className={styles.subscribersContainer}>
-                    {subscribers.map((sub) => (
-                        <div key={sub.stream.connection.connectionId} className={styles.subscriber}>
+                    </div>
+                ) : null}
+                <div className={styles.participants}>
+                    {publisher !== undefined ? (
+                        <div className={styles.streamContainer} onClick={() => handleMainVideoStream(publisher)}>
+                            <UserVideoComponent streamManager={publisher} />
+                        </div>
+                    ) : null}
+                    {subscribers.map((sub, i) => (
+                        <div key={sub.id} className={styles.streamContainer} onClick={() => handleMainVideoStream(sub)}>
                             <UserVideoComponent streamManager={sub} />
                         </div>
                     ))}
@@ -201,9 +231,9 @@ const RoomMeeting: React.FC = () => {
                 switchCamera={switchCamera}
                 leaveSession={leaveSession}
                 shareScreen={shareScreen}
-                roomName={roomName}  // Pass roomName as a prop
-								toggleChat={toggleChat}
-						/>
+                roomName={roomName}
+                toggleChat={() => { console.log('Toggle Chat!'); }}
+            />
         </div>
     );
 };
