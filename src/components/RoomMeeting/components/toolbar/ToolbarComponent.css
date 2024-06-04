@@ -1,0 +1,77 @@
+#header {
+  color: #ffffff;
+  height: 40px;
+  background-color: #333333;
+  padding: 0 14px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999999;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px;
+}
+
+#navSessionInfo {
+  display: flex;
+  align-items: center;
+}
+
+#navChatButton {
+  position: static;
+}
+
+.buttonsContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#titleContent {
+  max-width: 200px;
+  background-color: #494949;
+  margin: 0 10px;
+  padding: 0 15px;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#header_img {
+  max-width: 135px;
+  margin-right: 10px;
+}
+
+#point {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 12px;
+  right: 33px;
+  border-radius: 50%;
+  background-color: #ffa600;
+  border: 1px solid #000;
+  z-index: 99999;
+}
+
+@media only screen and (max-width: 700px) {
+  #titleContent,
+  #navChatButton {
+    display: none;
+  }
+}
